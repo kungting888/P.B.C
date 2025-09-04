@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>飲品訂購單</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background-color: #f8f8f8; }
+    label { display: block; margin-top: 1em; }
+    button { margin-top: 2em; background: darkgreen; color: white; padding: 0.5em 1.5em; border: none; }
+  </style>
+</head>
+<body>
+  <h1>飲品訂購單</h1>
+  <label>姓名 <input type="text" id="name"></label>
+  <label>電話 <input type="text" id="phone"></label>
+  <label>選擇飲品（最多一杯）：</label>
+  <label><input type="radio" name="drink" value="MOJITO"> MOJITO</label>
+  <label><input type="radio" name="drink" value="MAITAI"> MAITAI</label>
+  <label><input type="radio" name="drink" value="LONG ISLAND"> LONG ISLAND</label>
+  <label><input type="radio" name="drink" value="水蜜桃冰茶"> 水蜜桃冰茶</label>
+  <label><input type="radio" name="drink" value="田納西冰茶"> 田納西冰茶</label>
+  <button onclick="submitForm()">送出訂單</button>
+
+  <script>
+    function submitForm() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const drink = document.querySelector('input[name="drink"]:checked')?.value;
+
+      if (!name || !phone || !drink) {
+        alert("請完整填寫所有欄位");
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbzs694VOxaPF5XRu77OPc-I4gjCat-jWJos7t5fl8XwuM5T4I4IityhUMvr84vvYJi-/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, drink })
+      })
+      .then(res => res.text())
+      .then(txt => alert(txt))
+      .catch(err => alert("❌ 發生錯誤，請稍後再試"));
+    }
+  </script>
+</body>
+</html>
