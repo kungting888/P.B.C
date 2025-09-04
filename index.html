@@ -2,127 +2,58 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>P.B.C 線上點餐</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>點餐表單</title>
   <style>
-    body {
-      font-family: "Microsoft JhengHei", sans-serif;
-      background-color: #fff8f0;
-      padding: 2em;
-    }
-    h1 {
-      color: #c87c50;
-      text-align: center;
-    }
-    form {
-      max-width: 500px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 2em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-      font-weight: bold;
-    }
-    input[type="text"], input[type="tel"] {
-      width: 100%;
-      padding: 0.5em;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .drink-option {
-      margin-top: 0.5em;
-    }
-    .drink-option input {
-      margin-right: 0.5em;
-    }
-    button {
-      margin-top: 2em;
-      padding: 1em 2em;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #388E3C;
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    form { max-width: 400px; margin: auto; }
+    label, input, button { display: block; width: 100%; margin-bottom: 10px; }
+    button { background: green; color: white; padding: 10px; border: none; }
   </style>
 </head>
 <body>
-
-  <h1>P.B.C 線上點餐</h1>
+  <h2>飲品訂購單</h2>
   <form id="orderForm">
-    <label for="name">姓名：</label>
-    <input type="text" id="name" name="name" required>
+    <label>姓名 <input type="text" name="name" required></label>
+    <label>電話 <input type="text" name="phone" required></label>
 
-    <label for="phone">電話：</label>
-    <input type="tel" id="phone" name="phone" required>
-
-    <label>選擇飲品（最多一杯）</label>
-    <div class="drink-option">
-      <input type="radio" id="mojito" name="drink" value="MOJITO" required>
-      <label for="mojito">MOJITO（酒精10%／薄荷葉、萊姆酒）</label>
-    </div>
-    <div class="drink-option">
-      <input type="radio" id="maitai" name="drink" value="MAITAI">
-      <label for="maitai">MAITAI（酒精15%／鳳梨汁、萊姆酒）</label>
-    </div>
-    <div class="drink-option">
-      <input type="radio" id="longisland" name="drink" value="LONG ISLAND">
-      <label for="longisland">LONG ISLAND（酒精20%／蔓越莓汁、萊姆酒）</label>
-    </div>
-    <div class="drink-option">
-      <input type="radio" id="peachtea" name="drink" value="水蜜桃冰茶">
-      <label for="peachtea">水蜜桃冰茶（無酒精／蔓越莓汁）</label>
-    </div>
-    <div class="drink-option">
-      <input type="radio" id="tennesseetea" name="drink" value="田納西冰茶">
-      <label for="tennesseetea">田納西冰茶（無酒精／鳳梨汁）</label>
-    </div>
+    <p>選擇飲品（最多一杯）：</p>
+    <label><input type="radio" name="drink" value="MOJITO" required> MOJITO</label>
+    <label><input type="radio" name="drink" value="MAITAI"> MAITAI</label>
+    <label><input type="radio" name="drink" value="LONG ISLAND"> LONG ISLAND</label>
+    <label><input type="radio" name="drink" value="水蜜桃冰茶"> 水蜜桃冰茶</label>
+    <label><input type="radio" name="drink" value="田納西冰茶"> 田納西冰茶</label>
 
     <button type="submit">送出訂單</button>
   </form>
 
   <script>
-    document.getElementById('orderForm').addEventListener('submit', function (e) {
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const drink = document.querySelector('input[name="drink"]:checked')?.value;
+      const form = e.target;
+      const data = {
+        name: form.name.value.trim(),
+        phone: form.phone.value.trim(),
+        drink: form.drink.value
+      };
 
-      if (!name || !phone || !drink) {
-        alert("請填寫完整資訊");
-        return;
-      }
-
-      fetch('https://script.google.com/macros/s/AKfycbzs694VOxaPF5XRu77OPc-I4gjCat-jWJos7t5fl8XwuM5T4I4IityhUMvr84vvYJi-/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, drink })
+      fetch("https://script.google.com/macros/s/AKfycbzs694VOxaPF5XRu77OPc-I4gjCat-jWJos7t5fl8XwuM5T4I4IityhUMvr84vvYJi-/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          alert('✅ 訂單已送出！請稍候接收通知。');
-          document.getElementById('orderForm').reset();
-        } else {
-          alert('❌ 發生錯誤：' + JSON.stringify(data));
-        }
+      .then(response => response.text())
+      .then(text => {
+        alert("✅ 訂單送出成功！");
+        form.reset();
       })
       .catch(err => {
-        alert('送出失敗，請稍後再試');
+        alert("❌ 發生錯誤，請稍後再試");
         console.error(err);
       });
     });
   </script>
-
 </body>
 </html>
