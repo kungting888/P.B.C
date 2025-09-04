@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>飲品點單表單</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; }
+    form { background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; }
+    .drinks { margin-top: 15px; }
+    button { background-color: #00c300; color: white; padding: 15px; margin-top: 20px; width: 100%; border: none; border-radius: 4px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <form id="orderForm">
+    <h2>飲品點單</h2>
+    <label for="name">姓名：</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="phone">電話：</label>
+    <input type="tel" id="phone" name="phone" required />
+
+    <div class="drinks">
+      <p><strong>選擇飲品（最多一杯）</strong></p>
+      <label><input type="radio" name="drink" value="MOJITO（酒精濃度10%／含薄荷葉、萊姆酒）" required /> MOJITO</label><br />
+      <label><input type="radio" name="drink" value="MAITAI（酒精濃度15%／含鳳梨汁、萊姆酒）" /> MAITAI</label><br />
+      <label><input type="radio" name="drink" value="LONG ISLAND（酒精濃度20%／含蔓越莓汁、萊姆酒）" /> LONG ISLAND</label><br />
+      <label><input type="radio" name="drink" value="水蜜桃冰茶（無酒精／含蔓越莓汁）" /> 水蜜桃冰茶</label><br />
+      <label><input type="radio" name="drink" value="田納西冰茶（無酒精／含鳳梨汁）" /> 田納西冰茶</label>
+    </div>
+
+    <button type="submit">送出訂單</button>
+  </form>
+
+  <script>
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const drink = document.querySelector('input[name="drink"]:checked').value;
+
+      const message = `點單資訊：%0A姓名：${name}%0A電話：${phone}%0A飲品：${drink}`;
+      const url = `https://line.me/R/ti/p/%40pbcparty?text=` + encodeURIComponent(message);
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>
